@@ -3,9 +3,9 @@ LABEL Maintainer="Tim de Pater <code@trafex.nl>" \
       Description="Lightweight container with Nginx 1.18 & PHP 7.4 based on Alpine Linux."
 
 # Install packages and remove default server definition
-RUN apk --no-cache add php7 php7-fpm php7-opcache php7-mysqli php7-json php7-openssl php7-curl \
+RUN apk --no-cache add php7 php7-fpm php7-opcache php7-json php7-openssl php7-curl \
     php7-zlib php7-xml php7-phar php7-intl php7-dom php7-xmlreader php7-ctype php7-session \
-    php7-mbstring php7-gd nginx supervisor curl && \
+    php7-mbstring php7-gd php7-sqlite3 git nginx supervisor curl && \
     rm /etc/nginx/conf.d/default.conf
 
 # Configure nginx
@@ -20,6 +20,7 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Setup document root
 RUN mkdir -p /var/www/html
+RUN git clone https://github.com/repvik/evDash_serverapi.git /var/www/html
 
 # Make sure files/folders needed by the processes are accessable when they run under the nobody user
 RUN chown -R nobody.nobody /var/www/html && \
